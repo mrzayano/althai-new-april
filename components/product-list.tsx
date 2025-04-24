@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import ProductCard from "@/components/product-card"
 import { Icons } from "@/components/icons"
 import { ClientSearchParams } from "@/components/client-search-params"
@@ -91,11 +91,14 @@ const allProducts = [
 ]
 
 export default function ProductList() {
+  return <ClientSearchParams>{(searchParams) => <ProductListContent searchParams={searchParams} />}</ClientSearchParams>
+}
+
+function ProductListContent({ searchParams }: { searchParams: URLSearchParams }) {
   const [filteredProducts, setFilteredProducts] = useState(allProducts)
   const [isLoading, setIsLoading] = useState(true)
-  const [searchParams, setSearchParams] = useState(new URLSearchParams(window.location.search))
 
-  const filterProducts = useCallback(() => {
+  useEffect(() => {
     // Simulate data loading
     setIsLoading(true)
 
@@ -143,40 +146,26 @@ export default function ProductList() {
     }, 500) // Simulate network delay
   }, [searchParams])
 
-  useEffect(() => {
-    filterProducts()
-  }, [filterProducts])
+  if (isLoading) {
+    return <ProductsSkeleton />
+  }
+
+  if (filteredProducts.length === 0) {
+    return (
+      <div className="text-center py-12 bg-gray-900 rounded-2xl">
+        <Icons.emptyBox className="h-16 w-16 mx-auto mb-4 text-gray-600" />
+        <h3 className="text-lg font-medium mb-2 text-white">No Products Found</h3>
+        <p className="text-gray-400">Try adjusting your filters to find what you're looking for.</p>
+      </div>
+    )
+  }
 
   return (
-    <ClientSearchParams>
-      {(sp) => {
-        useEffect(() => {
-          setSearchParams(sp)
-        }, [sp])
-
-        if (isLoading) {
-          return <ProductsSkeleton />
-        }
-
-        if (filteredProducts.length === 0) {
-          return (
-            <div className="text-center py-12 bg-gray-900 rounded-2xl">
-              <Icons.emptyBox className="h-16 w-16 mx-auto mb-4 text-gray-600" />
-              <h3 className="text-lg font-medium mb-2 text-white">No Products Found</h3>
-              <p className="text-gray-400">Try adjusting your filters to find what you're looking for.</p>
-            </div>
-          )
-        }
-
-        return (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )
-      }}
-    </ClientSearchParams>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {filteredProducts.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
   )
 }
 
