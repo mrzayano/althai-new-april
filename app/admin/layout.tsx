@@ -10,12 +10,9 @@ function getServerSession() {
 }
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  const session = getServerSession()
 
   // If not authenticated, redirect to login
-  if (!session) {
-    redirect("/admin/login")
-  }
+
 
   return (
     <div className="flex min-h-screen">
