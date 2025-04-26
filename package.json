@@ -64,12 +64,12 @@
     "@tiptap/core": "latest",
     "framer-motion": "latest",
     "react-chartjs-2": "latest",
-    "@supabase/supabase-js": "latest",
     "@tiptap/react": "latest",
     "@tiptap/starter-kit": "latest",
     "@tiptap/extension-placeholder": "latest",
     "@tiptap/extension-image": "latest",
-    "@tiptap/extension-link": "latest"
+    "@tiptap/extension-link": "latest",
+    "@supabase/supabase-js": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

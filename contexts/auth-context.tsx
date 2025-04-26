@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
-import { getCurrentUser, signIn, signOut, type UserSession, getSessionFromCookie } from "@/lib/auth"
+import { getCurrentUser, signIn, signOut, type UserSession, getSessionFromCookie } from "@/lib/auth-client"
 
 interface AuthContextType {
   user: UserSession | null
