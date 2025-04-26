@@ -3,17 +3,17 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { Lock, User } from "lucide-react"
+import { Lock, User, Loader2 } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function AdminLoginPage() {
-  const router = useRouter()
+  const { login } = useAuth()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -31,32 +31,34 @@ export default function AdminLoginPage() {
     setIsLoading(true)
 
     try {
-      // In a real app, this would be an API call
-      setTimeout(() => {
-        if (formData.email === "admin@althaifoods.com" && formData.password === "admin123") {
-          // Success - in a real app, this would set cookies or tokens
-          toast({
-            title: "Login Successful",
-            description: "Welcome back to the admin dashboard.",
-            variant: "default",
-          })
-          router.push("/admin/dashboard")
-        } else {
-          // Error
-          toast({
-            title: "Login Failed",
-            description: "Invalid email or password. Please try again.",
-            variant: "destructive",
-          })
-        }
-        setIsLoading(false)
-      }, 1500)
+      // Check if using the hardcoded credentials for demo
+      if (formData.email === "althai647uae" && formData.password === "/£₹^ndo93jdk") {
+        // Store demo auth in localStorage
+        localStorage.setItem("demoAuth", "true")
+        toast({
+          title: "Login Successful",
+          description: "Welcome back to the admin dashboard.",
+          variant: "default",
+        })
+        window.location.href = "/admin/dashboard"
+        return
+      }
+
+      // Otherwise use the auth system
+      await login(formData.email, formData.password)
+
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to the admin dashboard.",
+        variant: "default",
+      })
     } catch (error) {
       toast({
         title: "Login Failed",
-        description: "Something went wrong. Please try again.",
+        description: "Invalid email or password. Please try again.",
         variant: "destructive",
       })
+    } finally {
       setIsLoading(false)
     }
   }
@@ -68,8 +70,8 @@ export default function AdminLoginPage() {
           <Image src="/images/logo.svg" alt="Al Thai Foods" width={150} height={60} className="mx-auto h-16 w-auto" />
         </div>
 
-        <Card>
-          <CardHeader>
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="space-y-1">
             <CardTitle className="text-center text-2xl">Admin Login</CardTitle>
             <CardDescription className="text-center">
               Enter your credentials to access the admin dashboard
@@ -78,14 +80,14 @@ export default function AdminLoginPage() {
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Username / Email</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
                     id="email"
                     name="email"
-                    type="email"
-                    placeholder="admin@althaifoods.com"
+                    type="text"
+                    placeholder="althai647uae"
                     value={formData.email}
                     onChange={handleChange}
                     className="pl-10"
@@ -118,14 +120,20 @@ export default function AdminLoginPage() {
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </CardFooter>
           </form>
         </Card>
 
         <div className="mt-4 text-center text-sm text-gray-500">
-          <p>Demo credentials: admin@althaifoods.com / admin123</p>
+          <p>Demo credentials: althai647uae / /£₹^ndo93jdk</p>
         </div>
       </div>
     </div>

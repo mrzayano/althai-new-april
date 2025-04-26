@@ -7,7 +7,7 @@ import { Menu, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
-
+import ThemeSwitcher from "./theme-switcher"
 import MobileMenu from "./mobile-menu"
 
 const Header = () => {
@@ -39,7 +39,7 @@ const Header = () => {
       <div
         className={cn(
           "transition-all duration-300 backdrop-blur-md",
-          isScrolled ? "bg-black/80 py-3" : "bg-transparent py-6",
+          isScrolled ? "bg-white/90 dark:bg-gray-900/90 py-3 shadow-sm" : "bg-transparent py-6",
         )}
       >
         <div className="container mx-auto px-4">
@@ -56,7 +56,7 @@ const Header = () => {
                   href={link.href}
                   className={cn(
                     "text-sm font-medium transition-colors hover:text-primary-600",
-                    pathname === link.href ? "text-primary-600 font-semibold" : "text-white",
+                    pathname === link.href ? "text-primary-600 font-semibold" : "text-gray-800 dark:text-white",
                   )}
                 >
                   {link.label}
@@ -64,28 +64,30 @@ const Header = () => {
               ))}
             </nav>
 
-            {/* Contact Info */}
+            {/* Contact Info & Theme Switcher */}
             <div className="hidden md:flex items-center space-x-6">
               <a
                 href="tel:+9716567314"
-                className="flex items-center text-sm text-white hover:text-primary-600 transition-colors"
+                className="flex items-center text-sm text-gray-800 dark:text-white hover:text-primary-600 transition-colors"
               >
                 <Phone className="w-4 h-4 mr-2" />
                 +971 65673141
               </a>
+              <ThemeSwitcher />
               <Button asChild>
                 <Link href="/contact">Contact Us</Link>
               </Button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center space-x-4">
+              <ThemeSwitcher />
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMobileMenuOpen(true)}
                 aria-label="Open mobile menu"
-                className="text-white"
+                className="text-gray-800 dark:text-white"
               >
                 <Menu className="h-6 w-6" />
               </Button>

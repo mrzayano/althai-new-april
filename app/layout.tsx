@@ -1,21 +1,23 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Toaster } from "@/components/ui/toaster"
 import WhatsAppButton from "@/components/whatsapp-button"
+import { AuthProvider } from "@/contexts/auth-context"
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 })
 
-const playfairDisplay = Playfair_Display({
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-poppins",
 })
 
 export const metadata: Metadata = {
@@ -33,16 +35,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfairDisplay.variable} font-sans bg-black text-white`}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <WhatsAppButton />
-            <Toaster />
-          </div>
-        </ThemeProvider>
+      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
+        <AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <WhatsAppButton />
+              <Toaster />
+            </div>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )

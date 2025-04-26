@@ -70,7 +70,7 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)"],
-        playfair: ["var(--font-playfair)"],
+        poppins: ["var(--font-poppins)"],
       },
       keyframes: {
         "accordion-down": {
