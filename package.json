@@ -62,6 +62,7 @@
     "chart.js": "latest",
     "@tiptap/pm": "latest",
     "@tiptap/core": "latest",
+    "@supabase/supabase-js": "latest",
     "framer-motion": "latest",
     "react-chartjs-2": "latest",
     "@tiptap/react": "latest",
@@ -69,7 +70,8 @@
     "@tiptap/extension-placeholder": "latest",
     "@tiptap/extension-image": "latest",
     "@tiptap/extension-link": "latest",
-    "@supabase/supabase-js": "latest"
+    "@supabase/auth-helpers-nextjs": "latest",
+    "jodit-react": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

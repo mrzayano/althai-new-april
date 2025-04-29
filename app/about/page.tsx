@@ -18,10 +18,10 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative h-[70vh] flex items-center">
+      <section className="relative h-[70vh] flex items-center bg-white">
         <div className="absolute inset-0 z-0">
           <Image src="/images/about-hero.jpg" alt="Al Thai Foods facility" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-black/70" />
+          <div className="absolute inset-0 bg-black/50" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
@@ -33,7 +33,7 @@ export default function AboutPage() {
             className="max-w-3xl"
           >
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">Our Story</h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl">
+            <p className="text-xl text-gray-200 mb-8 max-w-2xl">
               From humble beginnings to becoming the UAE's leading flour supplier, discover the journey that shaped Al
               Thai Foods.
             </p>
@@ -42,7 +42,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our History */}
-      <section className="bg-black py-24">
+      <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -51,16 +51,16 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Our Journey</h2>
-              <p className="text-gray-300 text-lg mb-6">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Our Journey</h2>
+              <p className="text-gray-700 text-lg mb-6">
                 Founded in 1995, Al Thai Foods began as a small family-owned flour mill with a simple mission: to
                 provide the highest quality flour products to local bakeries in Ajman.
               </p>
-              <p className="text-gray-300 text-lg mb-6">
+              <p className="text-gray-700 text-lg mb-6">
                 Over the decades, we've grown into one of the UAE's most trusted flour suppliers, serving major
                 hypermarkets, bakeries, and food manufacturers across the region.
               </p>
-              <p className="text-gray-300 text-lg">
+              <p className="text-gray-700 text-lg">
                 Today, we combine traditional milling expertise with modern technology to deliver premium flour products
                 that meet the highest international standards.
               </p>
@@ -71,7 +71,7 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative h-[500px] rounded-2xl overflow-hidden"
+              className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl"
             >
               <Image src="/images/mill-facility.jpg" alt="Al Thai Foods mill facility" fill className="object-cover" />
             </motion.div>
@@ -80,7 +80,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline */}
-      <section className="bg-gray-950 py-24">
+      <section className="bg-gray-50 py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -89,15 +89,15 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Our Timeline</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Timeline</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Key milestones in our journey to becoming the UAE's premier flour supplier.
             </p>
           </motion.div>
 
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-800" />
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-200" />
 
             {/* Timeline items */}
             {[
@@ -152,9 +152,9 @@ export default function AboutPage() {
                 )}
               >
                 <div className={item.align === "left" ? "md:order-1" : "md:order-2"}>
-                  <div className="bg-gray-900 p-8 rounded-2xl">
-                    <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
-                    <p className="text-gray-400">{item.description}</p>
+                  <div className="bg-white p-8 rounded-2xl shadow-md">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-gray-600">{item.description}</p>
                   </div>
                 </div>
 
@@ -164,7 +164,7 @@ export default function AboutPage() {
                     item.align === "left" ? "md:order-2" : "md:order-1",
                   )}
                 >
-                  <div className="bg-primary-600 text-white text-xl font-bold w-16 h-16 rounded-full flex items-center justify-center z-10">
+                  <div className="bg-primary-600 text-white text-xl font-bold w-16 h-16 rounded-full flex items-center justify-center z-10 shadow-lg">
                     {item.year}
                   </div>
                 </div>
@@ -175,7 +175,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="bg-black py-24">
+      <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -184,8 +184,8 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Our Values</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Values</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               The principles that guide everything we do at Al Thai Foods.
             </p>
           </motion.div>
@@ -235,13 +235,13 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-gray-900 p-8 rounded-2xl"
+                className="bg-white p-8 rounded-2xl shadow-md border border-gray-100"
               >
-                <div className="h-12 w-12 bg-primary-900/50 rounded-lg flex items-center justify-center mb-6">
+                <div className="h-12 w-12 bg-primary-50 rounded-lg flex items-center justify-center mb-6">
                   <value.icon className="h-6 w-6 text-primary-600" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{value.title}</h3>
-                <p className="text-gray-400">{value.description}</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{value.title}</h3>
+                <p className="text-gray-600">{value.description}</p>
               </motion.div>
             ))}
           </div>
@@ -249,7 +249,7 @@ export default function AboutPage() {
       </section>
 
       {/* Leadership Team */}
-      <section className="bg-gray-950 py-24">
+      <section className="bg-gray-50 py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -258,8 +258,8 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Our Leadership</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Our Leadership</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Meet the team driving Al Thai Foods' vision and success.
             </p>
           </motion.div>
@@ -310,7 +310,7 @@ export default function AboutPage() {
       </section>
 
       {/* Facilities */}
-      <section className="bg-black py-24">
+      <section className="bg-white py-24">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -319,16 +319,16 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Our Facilities</h2>
-              <p className="text-gray-300 text-lg mb-6">
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">Our Facilities</h2>
+              <p className="text-gray-700 text-lg mb-6">
                 Our state-of-the-art milling facility in Ajman combines traditional expertise with modern technology to
                 produce the finest flour products.
               </p>
-              <p className="text-gray-300 text-lg mb-6">
+              <p className="text-gray-700 text-lg mb-6">
                 With a production capacity of over 500 tons per day, we can meet the demands of businesses of all sizes,
                 from small local bakeries to major hypermarkets and food manufacturers.
               </p>
-              <p className="text-gray-300 text-lg mb-8">
+              <p className="text-gray-700 text-lg mb-8">
                 Our facility is equipped with advanced quality control laboratories, ensuring that every batch of flour
                 meets our rigorous standards before reaching our customers.
               </p>
@@ -345,7 +345,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="relative h-64 rounded-xl overflow-hidden"
+                className="relative h-64 rounded-xl overflow-hidden shadow-md"
               >
                 <Image src="/images/facility-1.jpg" alt="Milling equipment" fill className="object-cover" />
               </motion.div>
@@ -354,7 +354,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
-                className="relative h-64 rounded-xl overflow-hidden"
+                className="relative h-64 rounded-xl overflow-hidden shadow-md"
               >
                 <Image src="/images/facility-2.jpg" alt="Quality control lab" fill className="object-cover" />
               </motion.div>
@@ -363,7 +363,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="relative h-64 rounded-xl overflow-hidden"
+                className="relative h-64 rounded-xl overflow-hidden shadow-md"
               >
                 <Image src="/images/facility-3.jpg" alt="Packaging line" fill className="object-cover" />
               </motion.div>
@@ -372,7 +372,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 viewport={{ once: true }}
-                className="relative h-64 rounded-xl overflow-hidden"
+                className="relative h-64 rounded-xl overflow-hidden shadow-md"
               >
                 <Image src="/images/facility-4.jpg" alt="Warehouse" fill className="object-cover" />
               </motion.div>
@@ -382,17 +382,17 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gray-950 py-24">
+      <section className="bg-gray-50 py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-r from-primary-900 to-primary-800 rounded-3xl p-12 md:p-20 text-center"
+            className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-3xl p-12 md:p-20 text-center shadow-xl"
           >
             <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Experience Premium Quality?</h2>
-            <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
               Join the hundreds of businesses across the UAE that trust Al Thai Foods for their flour needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

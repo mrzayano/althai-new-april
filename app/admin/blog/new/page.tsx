@@ -14,22 +14,12 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
-import { getSupabaseBrowserClient } from "@/lib/supabase"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import dynamic from "next/dynamic"
-
-// Import the editor dynamically to avoid SSR issues
-const RichTextEditor = dynamic(() => import("@/components/admin/rich-text-editor"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex justify-center items-center h-[400px] border rounded-md bg-gray-50 dark:bg-gray-900">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-    </div>
-  ),
-})
+import BlogEditor from "@/components/admin/blog-editor"
 
 const blogPostSchema = z.object({
   title: z.string().min(5, {
@@ -84,6 +74,7 @@ export default function NewBlogPostPage() {
   const [featuredImage, setFeaturedImage] = useState<File | null>(null)
   const [featuredImageUrl, setFeaturedImageUrl] = useState<string>("")
   const [activeTab, setActiveTab] = useState("basic")
+  const supabase = createClientComponentClient()
 
   const form = useForm<BlogPostFormValues>({
     resolver: zodResolver(blogPostSchema),
@@ -93,7 +84,6 @@ export default function NewBlogPostPage() {
   const onSubmit = async (data: BlogPostFormValues) => {
     try {
       setIsSubmitting(true)
-      const supabase = getSupabaseBrowserClient()
 
       // Upload featured image if any
       let featuredImagePath = ""
@@ -397,7 +387,7 @@ export default function NewBlogPostPage() {
                       <FormItem>
                         <FormLabel>Content *</FormLabel>
                         <FormControl>
-                          <RichTextEditor value={field.value} onChange={field.onChange} />
+                          <BlogEditor value={field.value} onChange={field.onChange} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

@@ -1,295 +1,152 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Filter, X } from "lucide-react"
-import { ClientSearchParams } from "@/components/client-search-params"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+
+const categories = [
+  { id: "all-purpose", name: "All-Purpose Flour" },
+  { id: "bread", name: "Bread Flour" },
+  { id: "cake", name: "Cake Flour" },
+  { id: "pastry", name: "Pastry Flour" },
+  { id: "whole-wheat", name: "Whole Wheat Flour" },
+  { id: "specialty", name: "Specialty Flour" },
+]
+
+const weights = [
+  { id: "1kg", name: "1 kg" },
+  { id: "5kg", name: "5 kg" },
+  { id: "10kg", name: "10 kg" },
+  { id: "25kg", name: "25 kg" },
+  { id: "50kg", name: "50 kg" },
+]
 
 export default function ProductFilters() {
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
+  const searchParams = useSearchParams()
 
-  // Filter states
-  const [priceRange, setPriceRange] = useState([0, 100])
-  const [categories, setCategories] = useState<string[]>([])
-  const [sortBy, setSortBy] = useState("featured")
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedWeights, setSelectedWeights] = useState<string[]>([])
 
-  const toggleFilter = () => setIsOpen(!isOpen)
+  // Initialize filters from URL params
+  useEffect(() => {
+    const categoryParam = searchParams.get("category")
+    const weightParam = searchParams.get("weight")
 
-  const categoryOptions = [
-    { id: "wheat", label: "Wheat Flour" },
-    { id: "whole-wheat", label: "Whole Wheat" },
-    { id: "specialty", label: "Specialty" },
-    { id: "organic", label: "Organic" },
-  ]
+    if (categoryParam) {
+      setSelectedCategories(categoryParam.split(","))
+    }
 
-  const applyFilters = (searchParams: URLSearchParams) => {
-    // Build the query string
-    const params = new URLSearchParams(searchParams)
+    if (weightParam) {
+      setSelectedWeights(weightParam.split(","))
+    }
+  }, [searchParams])
 
-    // Add price range
-    params.set("minPrice", priceRange[0].toString())
-    params.set("maxPrice", priceRange[1].toString())
-
-    // Add categories
-    params.delete("category")
-    categories.forEach((cat) => {
-      params.append("category", cat)
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(categoryId)) {
+        return prev.filter((id) => id !== categoryId)
+      } else {
+        return [...prev, categoryId]
+      }
     })
+  }
 
-    // Add sort
-    params.set("sort", sortBy)
+  const handleWeightChange = (weightId: string) => {
+    setSelectedWeights((prev) => {
+      if (prev.includes(weightId)) {
+        return prev.filter((id) => id !== weightId)
+      } else {
+        return [...prev, weightId]
+      }
+    })
+  }
 
-    // Update URL
+  const applyFilters = () => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (selectedCategories.length > 0) {
+      params.set("category", selectedCategories.join(","))
+    } else {
+      params.delete("category")
+    }
+
+    if (selectedWeights.length > 0) {
+      params.set("weight", selectedWeights.join(","))
+    } else {
+      params.delete("weight")
+    }
+
     router.push(`/products?${params.toString()}`)
   }
 
   const resetFilters = () => {
-    setPriceRange([0, 100])
-    setCategories([])
-    setSortBy("featured")
+    setSelectedCategories([])
+    setSelectedWeights([])
     router.push("/products")
   }
 
   return (
-    <ClientSearchParams>
-      {(searchParams) => (
-        <>
-          {/* Mobile Filter Button */}
-          <div className="lg:hidden mb-6 flex justify-between items-center">
-            <Button variant="outline" onClick={toggleFilter} className="flex items-center">
-              <Filter className="w-4 h-4 mr-2" />
-              Filters
-            </Button>
-            <div>
-              <Label>Sort By:</Label>
-              <select
-                className="ml-2 p-2 border rounded-md text-sm bg-gray-900 text-white border-gray-700"
-                value={sortBy}
-                onChange={(e) => {
-                  setSortBy(e.target.value)
-                  const params = new URLSearchParams(searchParams)
-                  params.set("sort", e.target.value)
-                  router.push(`/products?${params.toString()}`)
-                }}
-              >
-                <option value="featured">Featured</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="newest">Newest</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Mobile Filters */}
-          <div
-            className={`lg:hidden fixed inset-0 bg-black z-50 transform transition-transform duration-300 ${
-              isOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-          >
-            <div className="p-4 border-b border-gray-800 flex justify-between items-center">
-              <h3 className="font-semibold text-lg text-white">Filters</h3>
-              <Button variant="ghost" size="icon" onClick={toggleFilter} className="text-white">
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            <div className="p-4 overflow-auto h-[calc(100vh-70px)]">
-              <div className="space-y-6">
-                {/* Price Range */}
-                <div>
-                  <h4 className="font-medium mb-3 text-white">Price Range</h4>
-                  <Slider
-                    defaultValue={priceRange}
-                    max={100}
-                    step={1}
-                    value={priceRange}
-                    onValueChange={setPriceRange}
-                    className="mb-2"
-                  />
-                  <div className="flex justify-between text-sm text-gray-400">
-                    <span>AED {priceRange[0]}</span>
-                    <span>AED {priceRange[1]}</span>
-                  </div>
-                </div>
-
-                {/* Categories */}
-                <div>
-                  <h4 className="font-medium mb-3 text-white">Categories</h4>
-                  <div className="space-y-2">
-                    {categoryOptions.map((option) => (
-                      <div key={option.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`mobile-category-${option.id}`}
-                          checked={categories.includes(option.id)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setCategories([...categories, option.id])
-                            } else {
-                              setCategories(categories.filter((cat) => cat !== option.id))
-                            }
-                          }}
-                        />
-                        <Label htmlFor={`mobile-category-${option.id}`} className="text-gray-300">
-                          {option.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Sort By */}
-                <div>
-                  <h4 className="font-medium mb-3 text-white">Sort By</h4>
-                  <RadioGroup value={sortBy} onValueChange={setSortBy}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="featured" id="mobile-sort-featured" />
-                      <Label htmlFor="mobile-sort-featured" className="text-gray-300">
-                        Featured
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="price-asc" id="mobile-sort-price-asc" />
-                      <Label htmlFor="mobile-sort-price-asc" className="text-gray-300">
-                        Price: Low to High
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="price-desc" id="mobile-sort-price-desc" />
-                      <Label htmlFor="mobile-sort-price-desc" className="text-gray-300">
-                        Price: High to Low
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="newest" id="mobile-sort-newest" />
-                      <Label htmlFor="mobile-sort-newest" className="text-gray-300">
-                        Newest
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </div>
-
-              <div className="flex space-x-4 mt-8">
-                <Button onClick={resetFilters} variant="outline" className="flex-1">
-                  Reset
-                </Button>
-                <Button
-                  onClick={() => {
-                    applyFilters(searchParams)
-                    toggleFilter()
-                  }}
-                  className="flex-1"
-                >
-                  Apply Filters
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Desktop Filters */}
-          <Card className="sticky top-32 hidden lg:block bg-gray-900 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-white">Filters</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Price Range */}
-              <div>
-                <h4 className="font-medium mb-3 text-white">Price Range</h4>
-                <Slider
-                  defaultValue={priceRange}
-                  max={100}
-                  step={1}
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  className="mb-2"
-                />
-                <div className="flex justify-between text-sm text-gray-400">
-                  <span>AED {priceRange[0]}</span>
-                  <span>AED {priceRange[1]}</span>
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div className="border-t border-gray-800 my-4"></div>
-
-              {/* Categories */}
-              <div>
-                <h4 className="font-medium mb-3 text-white">Categories</h4>
-                <div className="space-y-2">
-                  {categoryOptions.map((option) => (
-                    <div key={option.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`category-${option.id}`}
-                        checked={categories.includes(option.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setCategories([...categories, option.id])
-                          } else {
-                            setCategories(categories.filter((cat) => cat !== option.id))
-                          }
-                        }}
-                      />
-                      <Label htmlFor={`category-${option.id}`} className="text-gray-300">
-                        {option.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div className="border-t border-gray-800 my-4"></div>
-
-              {/* Sort By */}
-              <div>
-                <h4 className="font-medium mb-3 text-white">Sort By</h4>
-                <RadioGroup value={sortBy} onValueChange={setSortBy}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="featured" id="sort-featured" />
-                    <Label htmlFor="sort-featured" className="text-gray-300">
-                      Featured
+    <Card className="sticky top-24 border-0 shadow-md">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-xl font-bold">Filters</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <Accordion type="single" collapsible defaultValue="categories">
+          <AccordionItem value="categories" className="border-b-0">
+            <AccordionTrigger className="py-3 text-base font-medium">Categories</AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-3 pt-1">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`category-${category.id}`}
+                      checked={selectedCategories.includes(category.id)}
+                      onCheckedChange={() => handleCategoryChange(category.id)}
+                    />
+                    <Label htmlFor={`category-${category.id}`} className="text-sm cursor-pointer">
+                      {category.name}
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="price-asc" id="sort-price-asc" />
-                    <Label htmlFor="sort-price-asc" className="text-gray-300">
-                      Price: Low to High
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="price-desc" id="sort-price-desc" />
-                    <Label htmlFor="sort-price-desc" className="text-gray-300">
-                      Price: High to Low
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="newest" id="sort-newest" />
-                    <Label htmlFor="sort-newest" className="text-gray-300">
-                      Newest
-                    </Label>
-                  </div>
-                </RadioGroup>
+                ))}
               </div>
+            </AccordionContent>
+          </AccordionItem>
 
-              <div className="flex space-x-4 mt-4">
-                <Button onClick={resetFilters} variant="outline" className="flex-1">
-                  Reset
-                </Button>
-                <Button onClick={() => applyFilters(searchParams)} className="flex-1">
-                  Apply
-                </Button>
+          <AccordionItem value="weights" className="border-b-0">
+            <AccordionTrigger className="py-3 text-base font-medium">Weights</AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-3 pt-1">
+                {weights.map((weight) => (
+                  <div key={weight.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`weight-${weight.id}`}
+                      checked={selectedWeights.includes(weight.id)}
+                      onCheckedChange={() => handleWeightChange(weight.id)}
+                    />
+                    <Label htmlFor={`weight-${weight.id}`} className="text-sm cursor-pointer">
+                      {weight.name}
+                    </Label>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
-        </>
-      )}
-    </ClientSearchParams>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <div className="flex flex-col gap-2 pt-2">
+          <Button onClick={applyFilters} className="w-full">
+            Apply Filters
+          </Button>
+          <Button variant="outline" onClick={resetFilters} className="w-full">
+            Reset Filters
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

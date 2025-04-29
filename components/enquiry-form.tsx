@@ -40,9 +40,17 @@ export default function EnquiryForm() {
     setIsSubmitting(true)
 
     try {
-      // In a real implementation, this would be a call to your Supabase backend
-      // For now, we'll simulate a successful submission
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const response = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit inquiry")
+      }
 
       toast({
         title: "Enquiry Submitted",

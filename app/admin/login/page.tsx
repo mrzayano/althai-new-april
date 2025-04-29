@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,16 +11,17 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { Lock, User, Loader2 } from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 
 export default function AdminLoginPage() {
-  const { login } = useAuth()
+  const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
+  const supabase = createClientComponentClient()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -40,22 +42,30 @@ export default function AdminLoginPage() {
           description: "Welcome back to the admin dashboard.",
           variant: "default",
         })
-        window.location.href = "/admin/dashboard"
+        router.push("/admin/dashboard")
         return
       }
 
-      // Otherwise use the auth system
-      await login(formData.email, formData.password)
+      // Otherwise use Supabase auth
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      })
+
+      if (error) throw error
 
       toast({
         title: "Login Successful",
         description: "Welcome back to the admin dashboard.",
         variant: "default",
       })
-    } catch (error) {
+
+      router.push("/admin/dashboard")
+      router.refresh()
+    } catch (error: any) {
       toast({
         title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
+        description: error.message || "Invalid email or password. Please try again.",
         variant: "destructive",
       })
     } finally {
